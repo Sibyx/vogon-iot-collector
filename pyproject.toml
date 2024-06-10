@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "vogon-veggie-collector"
+version = "0.1.0"
+description = "MQTT consumer for IoT time-series data"
+authors = ["Jakub Dubec <jakub.dubec@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+paho-mqtt = "^2.1.0"
+psycopg = {version = "^3.1", extras = ["c", "pool"]}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,54 @@
+name: vogon-veggie-collector
+
+services:
+  broker:
+    image: eclipse-mosquitto
+    ports:
+      - 1883:1883
+    volumes:
+      - broker_storage:/mosquitto
+  db:
+    image: timescale/timescaledb-ha:pg16
+    volumes:
+      - postgresql_data:/home/postgres/pgdata/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: vogon_veggie
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d vogon_veggie'" ]
+      interval: 10s
+      start_period: 30s
+  grafana:
+    image: grafana/grafana-oss
+    environment:
+      GF_DATABASE_TYPE: postgres
+      GF_DATABASE_HOST: db:5432
+      GF_DATABASE_NAME: grafana
+      GF_DATABASE_USER: ${POSTGRES_USER}
+      GF_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      GF_DATABASE_SSL_MODE: disable
+    volumes:
+      - grafana_storage:/var/lib/grafana
+    ports:
+      - '3000:3000'
+    depends_on:
+      db:
+        condition: service_healthy
+  vogon:
+    image: vogon-veggie-collector
+    environment:
+      VOGON__DATABASE_URI: 'postgresql://postgres:postgres@db:5432/vogon_veggie'
+      VOGON__LOG_LEVEL: 'INFO'
+      VOGON__MQTT_BROKER: 'broker'
+    depends_on:
+      db:
+        condition: service_healthy
+      broker:
+        condition: service_started
+volumes:
+  postgresql_data:
+  grafana_storage:
+  broker_storage:

@@ -1,0 +1,15 @@
+[Unit]
+Description=Vogon Veggie Collector
+Wants=network-online.target
+After=network-online.target docker.service
+Requires=docker.service
+
+[Service]
+User=alarm
+Restart=always
+WorkingDirectory=/home/alarm/vogon-veggie-collector
+ExecStart=/usr/bin/docker compose --env-file=.env up
+ExecStop=/usr/bin/docker compose down all
+
+[Install]
+WantedBy=multi-user.target
