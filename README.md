@@ -38,7 +38,7 @@ usermod -aG docker alarm
 ### Access point
 
 ```shell
-pacman -S hostapd dhcp
+pacman -S hostapd kea
 ```
 
 **/etc/systemd/network/wlan0.network**

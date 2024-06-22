@@ -3,6 +3,7 @@ import logging
 from typing import TypedDict
 
 from paho.mqtt import subscribe
+from psycopg.rows import dict_row
 from psycopg_pool import ConnectionPool
 
 from vogon_veggie_collector.config import Config
@@ -35,11 +36,17 @@ class App:
         payload = json.loads(message.payload.decode())
 
         with userdata['pool'].connection() as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
+                sql = """
+                SELECT parameter_id FROM sensor_parameters WHERE sensor_id = %s AND sensor_value = %s;
+                """
+                parameter_id = cur.execute(sql, (payload['sensor'], payload['parameter'])).fetchone()['parameter_id']
+
             with conn.cursor() as cur:
                 sql = """
-                INSERT INTO measurements (device_address, pressure, temperature, humidity, created_at) VALUES (%s, %s, %s, %s, now());
+                INSERT INTO measurements (device_address, parameter_id, content) VALUES (%s, %s, %s);
                 """
-                cur.execute(sql, (payload['address'], payload['pressure'], payload['temperature'], payload['humidity']))
+                cur.execute(sql, (payload['address'], parameter_id, payload['value']))
 
     def run(self):
         subscribe.callback(

@@ -38,7 +38,7 @@ services:
       db:
         condition: service_healthy
   vogon:
-    image: vogon-veggie-collector
+    image: ghcr.io/sibyx/vogon-veggie-collector:latest
     environment:
       VOGON__DATABASE_URI: 'postgresql://postgres:postgres@db:5432/vogon_veggie'
       VOGON__LOG_LEVEL: 'INFO'
