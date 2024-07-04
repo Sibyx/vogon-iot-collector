@@ -53,7 +53,7 @@ class App:
             self.raw_collector,
             [
                 '+/+/raw',  # {service}/{node}/raw
-                '+/+/*/raw',  # {service}/{sink}/{node}/raw
+                '+/+/+/raw',  # {service}/{sink}/{node}/raw
             ],
             hostname=self._config.MQTT_BROKER,
             userdata={
