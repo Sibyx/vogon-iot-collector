@@ -2,8 +2,11 @@
 
 This changelog suppose to follow rules defined in the [changelog.md](https://changelog.md)
 
-## 0.2.0 - TBD
+## 0.2.0 - 2024-07-04
 
+vogon-veggie-collector -> vogon-iot-collector
+
+- **Added**: Sink support
 - **Changed**: Protocol changes
 - **Changed**: Flexible database structure
 

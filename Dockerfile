@@ -21,4 +21,4 @@ COPY --from=builder /root/.local /root/.local
 COPY --from=builder /usr/src/app /usr/src/app
 ENV PATH=/root/.local/bin:$PATH
 
-CMD ["python", "-m", "vogon_veggie_collector"]
+CMD ["python", "-m", "vogon_iot_collector"]

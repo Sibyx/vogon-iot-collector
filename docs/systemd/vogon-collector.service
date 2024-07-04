@@ -1,5 +1,5 @@
 [Unit]
-Description=Vogon Veggie Collector
+Description=Vogon IoT Collector
 Wants=network-online.target
 After=network-online.target docker.service
 Requires=docker.service
@@ -7,7 +7,7 @@ Requires=docker.service
 [Service]
 User=alarm
 Restart=always
-WorkingDirectory=/home/alarm/vogon-veggie-collector
+WorkingDirectory=/home/alarm/vogon-iot-collector
 ExecStart=/usr/bin/docker compose --env-file=.env up
 ExecStop=/usr/bin/docker compose down all
 

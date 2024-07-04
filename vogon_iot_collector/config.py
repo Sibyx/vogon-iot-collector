@@ -8,7 +8,6 @@ class Config:
     LOG_LEVEL: str = os.getenv('VOGON__LOG_LEVEL', 'INFO')
     DATABASE_URI: str = os.getenv('VOGON__DATABASE_URI')
     MQTT_BROKER: str = os.getenv('VOGON__MQTT_BROKER')
-    MQTT_TOPIC: str = os.getenv('VOGON__MQTT_TOPIC', '+/raw')
     BASE_DIR: Path = Path(__file__).resolve(strict=True).parent.parent
     VERSION: str = 'dev'
 

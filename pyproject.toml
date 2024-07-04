@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "vogon-veggie-collector"
+name = "vogon-iot-collector"
 version = "0.1.0"
 description = "MQTT consumer for IoT time-series data"
 authors = ["Jakub Dubec <jakub.dubec@gmail.com>"]

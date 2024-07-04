@@ -1,4 +1,4 @@
-name: vogon-veggie-collector
+name: vogon-iot-collector
 
 services:
   broker:
@@ -14,11 +14,11 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_DB: vogon_veggie
+      POSTGRES_DB: ${POSTGRES_DATABASE}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
-      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d vogon_veggie'" ]
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DATABASE}'" ]
       interval: 10s
       start_period: 30s
   grafana:
@@ -40,7 +40,7 @@ services:
   vogon:
     image: ghcr.io/sibyx/vogon-veggie-collector:latest
     environment:
-      VOGON__DATABASE_URI: 'postgresql://postgres:postgres@db:5432/vogon_veggie'
+      VOGON__DATABASE_URI: 'postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DATABASE}'
       VOGON__LOG_LEVEL: 'INFO'
       VOGON__MQTT_BROKER: 'broker'
     depends_on:

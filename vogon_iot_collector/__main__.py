@@ -6,7 +6,7 @@ from paho.mqtt import subscribe
 from psycopg.rows import dict_row
 from psycopg_pool import ConnectionPool
 
-from vogon_veggie_collector.config import Config
+from vogon_iot_collector.config import Config
 
 
 class UserData(TypedDict):
@@ -22,16 +22,16 @@ class App:
         if self._config.VERBOSE:
             stream_handler = logging.StreamHandler()
             stream_handler.setFormatter(logging.Formatter(
-                '[%(asctime)s] %(levelname)s [%(filename)s.%(funcName)s:%(lineno)d]: %(message)s',
+                '[%(asctime)s] %(levelname)s [%(filename)s.%(funcName)s:%(line no)d]: %(message)s',
                 datefmt='%Y-%m-%dT%H:%M:%S%z'
             ))
 
-        logging.info("Loading VogonVeggieCollector %s", self._config.VERSION)
+        logging.info("Loading Vogon IoT Collector %s", self._config.VERSION)
 
         self._database_pool = ConnectionPool(conninfo=self._config.DATABASE_URI)
 
     @staticmethod
-    def on_message(client, userdata: UserData, message):
+    def raw_collector(client, userdata: UserData, message):
         logging.debug("Topic [%s]: %s" % (message.topic, message.payload))
         payload = json.loads(message.payload.decode())
 
@@ -50,8 +50,11 @@ class App:
 
     def run(self):
         subscribe.callback(
-            self.on_message,
-            [self._config.MQTT_TOPIC],
+            self.raw_collector,
+            [
+                '+/+/raw',  # {service}/{node}/raw
+                '+/+/*/raw',  # {service}/{sink}/{node}/raw
+            ],
             hostname=self._config.MQTT_BROKER,
             userdata={
                 "pool": self._database_pool
